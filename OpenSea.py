@@ -18,7 +18,8 @@ class OpenSea:
             "assets": "https://api.opensea.io/api/v1/assets",
             "events": "https://api.opensea.io/api/v1/events",
             "orders": "https://api.opensea.io/wyvern/v1/orders",
-            "collections": "https://api.opensea.io/collection/",
+            "collection": "https://api.opensea.io/collection/",
+            "collections": "https://api.opensea.io/collections/",
             "events": "https://api.opensea.io/api/v1/events"
         }
         self.param_names = {
@@ -47,6 +48,9 @@ class OpenSea:
                 "limit",
                 "occurred_before",
                 "occurred_after"
+            ],
+            "collections": [
+                "limit",
             ]
         }
         self.request_headers = {
@@ -84,12 +88,28 @@ class OpenSea:
 
     def get_collection(self, name):
         # create request url
-        url = self.endpoints["collections"] + str(name)
+        url = self.endpoints["collection"] + str(name)
         # submit request to the OpenSea api
         response = requests.request("GET", url)
         if response.status_code == 200:
             response = json.loads(response.text)
             return Collection(response['collection'])
+        raise Exception(
+            "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
+
+    def get_collections(self, limit=300):
+        # create request url
+        url = self.endpoints["collections"]
+        _params = [limit]
+        # build request params and headers
+        params = self._build_request_params(_params, "collections")
+        headers = self.request_headers
+        headers["X-API-KEY"] = self.api_keys["opensea"]
+        # submit request to the OpenSea api
+        response = requests.request("GET", self.endpoints['collections'], params=params, headers=headers)
+        if response.status_code == 200:
+            response = json.loads(response.text)
+            return response
         raise Exception(
             "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
 
