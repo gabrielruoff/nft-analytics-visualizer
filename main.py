@@ -1,16 +1,17 @@
-# This is a sample Python script.
+from OpenSea import OpenSea, Collection, Event
+import requests
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# oS = OpenSea()
+# collections = oS.get_collections(limit=20)
+# print(collections['collections'][0])
+# c = []
+# for collection in collections['collections']:
+#     if collection['stats']['total_supply'] != 0.0:
+#         c.append(collection)
+# collections = c
+#
+# print(collections)
+# print(len(collections))
+headers = {"Accept": "application/json"}
+response = requests.request("GET", "https://opensea.io/rankings", headers=headers)
+print(response.text)
