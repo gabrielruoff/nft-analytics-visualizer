@@ -82,22 +82,36 @@ class OpenSea:
 
         _params = [limit, offset, token_ids, image_url, background_color, name, external_link, asset_contract, owner,
                    traits, last_sale]
+        # build request params and headers
         # build request params
         params = self._build_request_params(_params, "assets")
         headers = self.request_headers
         headers["X-API-KEY"] = self.api_keys["opensea"]
 
-        # submit request to the OpenSea api
-        response = requests.request("GET", self.endpoints["assets"], params=params)
-        # if response OK
-        if response.status_code == 200:
-            response = json.loads(response.text)
-            assets = []
-            for asset in response['assets']:
-                assets.append(Asset(asset))
-            return assets
-        raise Exception(
-            "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
+        # 50 is api limit
+        apilimit = self.api_limits["assets"]
+        _num_loops = int(math.ceil(limit / apilimit))
+        assets = []
+        for loop in range(1, _num_loops + 1):
+            params['offset'] = loop * apilimit
+            # set limit
+            if limit - ((loop - 1) * apilimit) > apilimit:
+                params['limit'] = apilimit
+            else:
+                params['limit'] = int(limit - ((loop - 1) * apilimit))
+            # submit request to the OpenSea api
+            response = requests.request("GET", self.endpoints["assets"], params=params, headers=headers)
+            # if response OK
+            if response.status_code == 200:
+                response = json.loads(response.text)
+                for asset in response['assets']:
+                    assets.append(Asset(asset))
+            else:
+                raise Exception(
+                    "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
+            if loop < _num_loops + 1:
+                time.sleep(3)
+        return assets
 
     def get_collection(self, name):
         # create request url
