@@ -9,6 +9,7 @@ from millify import millify
 import re
 from OpenSea import OpenSea, Collection, Event
 import requests
+import altair as alt
 
 
 #page initilization
@@ -66,7 +67,7 @@ with col8:
     st.image(headerCollection_8.image)
     st.metric(label=headerCollection_8.name, value=str(round(headerCollection_8.floorPrice, 3)) + " ETH", delta=str(round((100*headerCollection_8.oneDayChange), 2)) + "%")
 
-st.header("Charts")
+st.header("Collection Data")
 
 collectionDF=pd.read_csv(r'collection_names.csv')
 collection_list=collectionDF.drop_duplicates().values.tolist()
@@ -79,43 +80,60 @@ realNameList = []
     #print(tempCollection)
   #  realNameList.append(tempCollection) """
 
-graphOption = st.selectbox('Search and select a collection to visualize', collection_list, help="Collection data compiled from OpenSea") 
+graphOption = st.selectbox('Type to search and select a collection to visualize', collection_list, help="Collection data compiled from OpenSea", index = 358) 
 print(graphOption)
 graphCollection = oS.get_collection(graphOption)
 #print(graphCollection.name)
 
 
-@st.cache
 
 # Create a text element and let the reader know the data is loading.
 #data_load_state = st.text('Loading data...')
 # Load 10,000 rows of data into the dataframe.
 
 #data_load_state.text("Done! (using st.cache)")
-st.header("One Day:")
-sub1, sub2, sub3, sub4, sub5, sub6 = st.columns(6)
+#betaCol1, betaCol2 = st.columns(2)
+#betaCol2.header("Collection Data")
+#betaCol1.image(graphCollection.image)
+st.subheader(graphCollection.name)
+st.markdown("""---""")
 
-sub1.metric("Sales", graphCollection.oneDaySales)
-sub2.metric("Average Price", str(round(graphCollection.oneDayAvgPrice, 3)), delta=str(round((100*graphCollection.oneDayChange), 2)) + "%")
-sub3.metric("30 Day Sales", graphCollection.thirtyDaySales)
-#sub4.metric("1 Day Sales", graphCollection.)
-sub5.metric("1 Day Sales", graphCollection.oneDaySales, graphCollection.oneDayVolume)
-sub6.metric("1 Day Sales", graphCollection.oneDaySales, graphCollection.oneDayVolume)
-
-#if st.checkbox('Show raw data'):
-   # st.subheader('Raw data')
-   # st.write(data)
-#st.subheader(graphCollection.name)
-
-hist_values = np.histogram(
-    data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-
-st.bar_chart(hist_values)
-hour_to_filter = st.slider('hour', 0, 23, 17)  # min: 0h, max: 23h, default: 17h
+sub1, sub2, sub3, sub4, sub5, sub6, sub65= st.columns(7)
+#sub1.image(graphCollection.image)
+sub1.metric("Total Supply", millify(graphCollection.totalSupply))
+sub2.metric("Total Sales", millify(graphCollection.totalSales))
+sub3.metric("Total Volume", round(graphCollection.totalVolume),3)
 
 
+sub4.header("               |")
+sub5.metric("1 Day Sales", graphCollection.oneDaySales)
+sub6.metric("1 Day Average Price", str(round(graphCollection.oneDayAvgPrice, 2)) + " ETH", delta=str(round((100*graphCollection.oneDayChange), 2)) + "%")
+sub65.metric("1 Day Volume", round(graphCollection.oneDayVolume, 3))
+st.markdown("""---""")
 
-filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
+sub7, sub8, sub9, sub10, sub11, sub12, sub13= st.columns(7)
+st.markdown("""---""")
 
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-st.map(filtered_data)
+sub7.metric("7 Day Sales", graphCollection.sevenDaySales)
+sub8.metric("7 Day Average Price", str(round(graphCollection.sevenDayAvgPrice, 2)) + " ETH", delta=str(round((100*graphCollection.sevenDayChange), 2)) + "%")
+sub9.metric("7 Day Volume", round(graphCollection.sevenDayVolume, 3))
+sub10.header("|")
+sub11.metric("30 Day Sales", graphCollection.thirtyDaySales)
+sub12.metric("30 Day Average Price", str(round(graphCollection.thirtyDayAvgPrice, 2)) + " ETH", delta=str(round((100*graphCollection.thirtyDayChange), 2)) + "%")
+sub13.metric("30 Day Volume", round(graphCollection.thirtyDayVolume, 3))
+
+st.subheader("Price Activity")
+graphCollection.load_event_data()
+eventList = []
+for event in graphCollection.events:
+    eventList.append(event.total_price)
+print(eventList)
+line_chart_data = pd.DataFrame({'Dates': eventList, 'Price (ETH)':graphCollection.event_dates})
+
+chart = (
+    alt.Chart(line_chart_data).mark_line().encode(
+        x = 'Dates',
+        y = 'Price (ETH)'
+    )
+)
+st.altair_chart(chart,use_container_width=True)
