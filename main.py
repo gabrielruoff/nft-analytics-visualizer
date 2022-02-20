@@ -26,15 +26,15 @@ i=0
 for collection in collections:
 
     print(collection[0])
-    c = oS.get_collection(collection[0])
-    # print(c.oneDayChange)
+    c = oS.get_collection(collection[0], path='collectiondata/')
+    print(c.oneDayChange)
     i += 1
     # print(c.jsonData)
-    try:
-        c.export_json_data('collectiondata/')
-    except Exception:
-        pass
-    time.sleep(0.1)
+    # try:
+    #     c.export_json_data('collectiondata/')
+    # except Exception:
+    #     pass
+    # time.sleep(0.1)
 # collections = c
 # for collection in collections:
 #     print(collection.oneDayChange)

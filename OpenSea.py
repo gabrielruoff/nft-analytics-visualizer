@@ -118,7 +118,7 @@ class OpenSea:
             if path[-1] != '/':
                 path += '/'
             with open(path + name + '.json') as f:
-                return Collection(json.load(f))
+                return Collection(json.load(f), name)
         # create request url
         url = self.endpoints["collection"] + str(name)
         # submit request to the OpenSea api
