@@ -830,3 +830,7 @@ DevTools listening on ws://localhost:53383/devtools/browser/cceaa173-45f1-4be8-b
 1645317370290	Marionette	INFO	Listening on port 53388
 1645317370374	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
 [ERROR osclientcerts_static] ThreadId(14) C_FindObjectsInit: CKR_ARGUMENTS_BAD: ExternalError at security/manager/ssl/osclientcerts/src/backend_macos.rs:921 (-25300)
+1645317904332	Marionette	INFO	Stopped listening on port 53388
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
