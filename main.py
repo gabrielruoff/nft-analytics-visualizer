@@ -16,6 +16,8 @@ oS = OpenSea()
 
 with open('collection_names.csv', newline='') as f:
     reader = csv.reader(f)
+    # for i in range(1294):
+    #     next(reader)
     collections = list(reader)
 
 print("{} collections".format(len(collections)))
@@ -23,16 +25,16 @@ c = []
 i=0
 for collection in collections:
 
-    # print(collection[0])
-    #c = oS.get_collection(collection[0], path='collectiondata/')
+    print(collection[0])
+    c = oS.get_collection(collection[0])
     # print(c.oneDayChange)
     i += 1
     # print(c.jsonData)
-    # try:
-        # c.export_json_data('collectiondata/')
-    # except Exception:
-    #     pass
-    # time.sleep(0.2)
+    try:
+        c.export_json_data('collectiondata/')
+    except Exception:
+        pass
+    time.sleep(0.1)
 # collections = c
 # for collection in collections:
 #     print(collection.oneDayChange)
