@@ -4,15 +4,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 
-options = Options()
-options.add_argument("--headless")
-from selenium.webdriver.common.keys import Keys
-
-
 def scrape_collection_names(num_pages=1):
     driver = webdriver.Firefox()
     driver.get("https://opensea.io/rankings")
-    i = 0
+    options = Options()
+    options.add_argument("--headless")
     collections = []
     for i in range(num_pages):
         driver.execute_script("window.scrollBy(0, 375)")
