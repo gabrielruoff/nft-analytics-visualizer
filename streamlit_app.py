@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import csv
 
 st.set_page_config(layout="wide")
 
@@ -11,6 +12,17 @@ st.header("Floor Price Monitor")
 DATE_COLUMN = 'date/time'
 DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
          'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
+
+with open('collection_names.csv', newline='') as f:
+    reader = csv.reader(f)
+    collections = list(reader)
+
+print(collections)
+
+cols = [st.columns(len(collections))]
+for i, collection in enumerate(collections):
+    with cols[i]:
+        st.metric(label=collection, value="93.9 ETH", delta="-82.18%")
 
 col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
 

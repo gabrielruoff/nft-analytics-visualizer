@@ -221,6 +221,8 @@ class Collection:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
                 self.events = self.get_event_data()
+                self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
+                self.assets = self.get_asset_data()
 
         self.floorPrice = (jsonData['stats']['floor_price'])
         self.marketCap = (jsonData['stats']['market_cap'])
@@ -248,6 +250,11 @@ class Collection:
         with OpenSea() as oS:
             events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
             return events
+
+    def get_asset_data(self):
+        with OpenSea() as oS:
+            assets = oS.get_assets(300, asset_contract=self.ERC721Address)
+            return assets
 
 
 class Event:

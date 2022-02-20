@@ -834,3 +834,36 @@ DevTools listening on ws://localhost:53383/devtools/browser/cceaa173-45f1-4be8-b
 
 ###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
 
+[ERROR osclientcerts_static] ThreadId(50) C_FindObjectsInit: CKR_ARGUMENTS_BAD: ExternalError at security/manager/ssl/osclientcerts/src/backend_macos.rs:921 (-25300)
+1645320542040	geckodriver	INFO	Listening on 127.0.0.1:60248
+1645320542558	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "--remote-debugging-port" "60249" "-foreground" "-no-remote" "-profile" "/var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofileCbp7nY"
+1645320543063	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofileCbp7nY/search.json.mozlz4", (void 0)))
+console.error: BackgroundUpdate: 
+  _reasonsToNotScheduleUpdates: Failed to check for Maintenance Service Registry Key: [Exception... "Component returned failure code: 0x80004001 (NS_ERROR_NOT_IMPLEMENTED) [nsIUpdateProcessor.getServiceRegKeyExists]"  nsresult: "0x80004001 (NS_ERROR_NOT_IMPLEMENTED)"  location: "JS frame :: resource://gre/modules/BackgroundUpdate.jsm :: _reasonsToNotScheduleUpdates :: line 243"  data: no]
+DevTools listening on ws://localhost:60249/devtools/browser/ddae55b3-ea55-43ad-866a-c9465762463b
+1645320544394	Marionette	INFO	Listening on port 60257
+1645320544451	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1645320747881	geckodriver	INFO	Listening on 127.0.0.1:60783
+1645320748397	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "--remote-debugging-port" "60784" "-foreground" "-no-remote" "-profile" "/var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofilev8sWN3"
+1645320748884	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofilev8sWN3/search.json.mozlz4", (void 0)))
+console.error: BackgroundUpdate: 
+  _reasonsToNotScheduleUpdates: Failed to check for Maintenance Service Registry Key: [Exception... "Component returned failure code: 0x80004001 (NS_ERROR_NOT_IMPLEMENTED) [nsIUpdateProcessor.getServiceRegKeyExists]"  nsresult: "0x80004001 (NS_ERROR_NOT_IMPLEMENTED)"  location: "JS frame :: resource://gre/modules/BackgroundUpdate.jsm :: _reasonsToNotScheduleUpdates :: line 243"  data: no]
+DevTools listening on ws://localhost:60784/devtools/browser/aa76cc2f-34cc-4afc-81e8-506fe0077a59
+1645320750658	Marionette	INFO	Listening on port 60792
+1645320750709	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1645320752575	Marionette	INFO	Stopped listening on port 60257
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1645320816995	geckodriver	INFO	Listening on 127.0.0.1:61070
+1645320817507	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "--remote-debugging-port" "61071" "-foreground" "-no-remote" "-profile" "/var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofileaSP97X"
+1645320817898	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /var/folders/fp/c1jtckp10gq4616z11b68nfw0000gn/T/rust_mozprofileaSP97X/search.json.mozlz4", (void 0)))
+console.error: BackgroundUpdate: 
+  _reasonsToNotScheduleUpdates: Failed to check for Maintenance Service Registry Key: [Exception... "Component returned failure code: 0x80004001 (NS_ERROR_NOT_IMPLEMENTED) [nsIUpdateProcessor.getServiceRegKeyExists]"  nsresult: "0x80004001 (NS_ERROR_NOT_IMPLEMENTED)"  location: "JS frame :: resource://gre/modules/BackgroundUpdate.jsm :: _reasonsToNotScheduleUpdates :: line 243"  data: no]
+DevTools listening on ws://localhost:61071/devtools/browser/e9fa006e-fe62-4281-89d6-6fec8714f625
+1645320819119	Marionette	INFO	Listening on port 61080
+1645320819171	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1645320947831	Marionette	INFO	Stopped listening on port 61080

@@ -2,6 +2,10 @@ import time
 import csv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+
+options = Options()
+options.add_argument("--headless")
 from selenium.webdriver.common.keys import Keys
 
 # def unique(l):
@@ -35,7 +39,7 @@ driver = webdriver.Firefox()
 driver.get("https://opensea.io/rankings")
 i = 0
 collections = []
-while i < 10:
+while i < 20:
     driver.execute_script("window.scrollBy(0, 375)")
     time.sleep(1)
     position = 0
@@ -57,6 +61,7 @@ while i < 10:
     button = driver.find_element(By.XPATH, "//button[@class='Blockreact__Block-sc-1xf18x6-0 Buttonreact__StyledButton-sc-glfma3-0 kGCMze hJoTEY']")
     button.click()
     i+=1
+driver.quit()
 collections = set(collections)
 print(collections)
 print(len(collections))
