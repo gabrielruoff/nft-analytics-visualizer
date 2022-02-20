@@ -1,10 +1,12 @@
 from gc import collect
 from matplotlib import image
+from matplotlib.pyplot import bar
 import streamlit as st
 import pandas as pd
 import numpy as np
 import csv
 from millify import millify
+import re
 from OpenSea import OpenSea, Collection, Event
 import requests
 
@@ -58,37 +60,52 @@ with col6:
 with col7:
     #delta metric
     st.image(headerCollection_7.image)
-    st.metric(label=headerCollection_7.name, value=str(headerCollection_7.floorPrice) + " ETH", delta=str(round((100*headerCollection_7.oneDayChange), 2)) + "%")
+    st.metric(label=headerCollection_7.name, value=str(round(headerCollection_7.floorPrice, 3)) + " ETH", delta=str(round((100*headerCollection_7.oneDayChange), 2)) + "%")
 with col8:
     #delta metric
     st.image(headerCollection_8.image)
-    st.metric(label=headerCollection_8.name, value=str(headerCollection_8.floorPrice) + " ETH", delta=str(round((100*headerCollection_8.oneDayChange), 2)) + "%")
+    st.metric(label=headerCollection_8.name, value=str(round(headerCollection_8.floorPrice, 3)) + " ETH", delta=str(round((100*headerCollection_8.oneDayChange), 2)) + "%")
+
+st.header("Charts")
 
 collectionDF=pd.read_csv(r'collection_names.csv')
-collection_list=collectionDF.drop_duplicates().values
+collection_list=collectionDF.drop_duplicates().values.tolist()
+collection_list = [x[0] for x in collection_list]
+#print(collection_list)
+realNameList = []
+#for name in collection_list:
+    #print(name)
+ #   tempCollection = oS.get_collection(name)
+    #print(tempCollection)
+  #  realNameList.append(tempCollection) """
 
-graphOption = st.selectbox('Select a collection to visualize', collection_list) 
+graphOption = st.selectbox('Search and select a collection to visualize', collection_list, help="Collection data compiled from OpenSea") 
+print(graphOption)
+graphCollection = oS.get_collection(graphOption)
+#print(graphCollection.name)
 
 
 @st.cache
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
-    return data
 
 # Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Loading data...')
+#data_load_state = st.text('Loading data...')
 # Load 10,000 rows of data into the dataframe.
-data = load_data(10000)
-# Notify the reader that the data was successfully loaded.
-data_load_state.text("Done! (using st.cache)")
 
-if st.checkbox('Show raw data'):
-    st.subheader('Raw data')
-    st.write(data)
-st.subheader('Number of pickups by hour')
+#data_load_state.text("Done! (using st.cache)")
+st.header("One Day:")
+sub1, sub2, sub3, sub4, sub5, sub6 = st.columns(6)
+
+sub1.metric("Sales", graphCollection.oneDaySales)
+sub2.metric("Average Price", str(round(graphCollection.oneDayAvgPrice, 3)), delta=str(round((100*graphCollection.oneDayChange), 2)) + "%")
+sub3.metric("30 Day Sales", graphCollection.thirtyDaySales)
+#sub4.metric("1 Day Sales", graphCollection.)
+sub5.metric("1 Day Sales", graphCollection.oneDaySales, graphCollection.oneDayVolume)
+sub6.metric("1 Day Sales", graphCollection.oneDaySales, graphCollection.oneDayVolume)
+
+#if st.checkbox('Show raw data'):
+   # st.subheader('Raw data')
+   # st.write(data)
+#st.subheader(graphCollection.name)
 
 hist_values = np.histogram(
     data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
