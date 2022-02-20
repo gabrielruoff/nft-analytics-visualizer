@@ -23,6 +23,10 @@ class OpenSea:
             "collections": "https://api.opensea.io/collections/",
             "events": "https://api.opensea.io/api/v1/events"
         }
+        self.api_limits = {
+            "events": 300,
+            "assets": 50
+        }
         self.param_names = {
             "assets": [
                 "limit",
@@ -78,20 +82,35 @@ class OpenSea:
 
         _params = [limit, offset, token_ids, image_url, background_color, name, external_link, asset_contract, owner,
                    traits, last_sale]
-        # build request params
+        # build request params and headers
         params = self._build_request_params(_params, "assets")
+        headers = self.request_headers
+        headers["X-API-KEY"] = self.api_keys["opensea"]
 
-        # submit request to the OpenSea api
-        response = requests.request("GET", self.endpoints["assets"], params=params)
-        # if response OK
-        if response.status_code == 200:
-            response = json.loads(response.text)
-            assets = []
-            for asset in response['assets']:
-                assets.append(Asset(asset))
-            return assets
-        raise Exception(
-            "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
+        # 50 is api limit
+        apilimit = self.api_limits["assets"]
+        _num_loops = int(math.ceil(limit / apilimit))
+        assets = []
+        for loop in range(1, _num_loops + 1):
+            params['offset'] = loop * apilimit
+            # set limit
+            if limit - ((loop - 1) * apilimit) > apilimit:
+                params['limit'] = apilimit
+            else:
+                params['limit'] = int(limit - ((loop - 1) * apilimit))
+            # submit request to the OpenSea api
+            response = requests.request("GET", self.endpoints["assets"], params=params, headers=headers)
+            # if response OK
+            if response.status_code == 200:
+                response = json.loads(response.text)
+                for asset in response['assets']:
+                    assets.append(Asset(asset))
+            else:
+                raise Exception(
+                    "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
+            if loop < _num_loops + 1:
+                time.sleep(3)
+        return assets
 
     def get_collection(self, name):
         # create request url
@@ -135,15 +154,16 @@ class OpenSea:
         headers["X-API-KEY"] = self.api_keys["opensea"]
 
         # 300 is api limit
-        _num_loops = int(math.ceil(limit / 300))
+        apilimit = self.api_limits["events"]
+        _num_loops = int(math.ceil(limit / apilimit))
         events = []
         for loop in range(1, _num_loops+1):
-            params['offset'] = loop * 300
+            params['offset'] = loop * apilimit
             # set limit
-            if limit - ((loop-1) * 300) > 300:
-                params['limit'] = 300
+            if limit - ((loop-1) * apilimit) > apilimit:
+                params['limit'] = apilimit
             else:
-                params['limit'] = limit - ((loop-1) * 300)
+                params['limit'] = int(limit - ((loop-1) * apilimit))
             # submit request to the OpenSea api
             response = requests.request("GET", self.endpoints["events"], params=params, headers=headers)
             # if response OK
@@ -217,13 +237,6 @@ class Collection:
         self.events = None
         self.event_dates = None
 
-        for contract in jsonData['primary_asset_contracts']:
-            if contract["asset_contract_type"] == "non-fungible":
-                self.ERC721Address = contract["address"]
-                self.events = self.get_event_data()
-                self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
-                self.assets = self.get_asset_data()
-
         self.floorPrice = (jsonData['stats']['floor_price'])
         self.marketCap = (jsonData['stats']['market_cap'])
         self.numReports = (jsonData['stats']['num_reports'])
@@ -246,6 +259,13 @@ class Collection:
         self.oneDayChange = (jsonData['stats']['one_day_change'])
         self.oneDayVolume = (jsonData['stats']['one_day_volume'])
 
+        for contract in jsonData['primary_asset_contracts']:
+            if contract["asset_contract_type"] == "non-fungible":
+                self.ERC721Address = contract["address"]
+                self.events = self.get_event_data()
+                self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
+                self.assets = self.get_asset_data()
+
     def get_event_data(self):
         with OpenSea() as oS:
             events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
@@ -253,7 +273,7 @@ class Collection:
 
     def get_asset_data(self):
         with OpenSea() as oS:
-            assets = oS.get_assets(300, asset_contract=self.ERC721Address)
+            assets = oS.get_assets(50, asset_contract=self.ERC721Address)
             return assets
 
 
