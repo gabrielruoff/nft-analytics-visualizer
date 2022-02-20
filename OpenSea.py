@@ -214,13 +214,33 @@ class Collection:
                 self.get_event_data()
 
         self.stats = jsonData['stats']
-        self.floor = jsonData['stats']['floor_price']
-        self.events = None
-        self.event_dates = None
+        print('got here')
+        print(self.stats)
 
-    def get_event_data(self):
-        self.events = Event.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
-        self.event_dates = [datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
+
+
+
+        self.floorPrice = (jsonData['collections'][0]['stats']['floor_price'])
+        self.marketCap = (jsonData['stats']['market_cap'])
+        self.numReports = (jsonData['stats']['num_reports'])
+        self.averagePrice = (jsonData['stats']['average_price'])
+        self.numOwners = (jsonData['stats']['num_owners'])
+        self.count = (jsonData['stats']['count'])
+        self.totalSupply = (jsonData['stats']['total_supply'])
+        self.totalSales = (jsonData['stats']['total_sales'])
+        self.totalVolume = (jsonData['stats']['total_volume'])
+        self.thirtyDayAvgPrice = (jsonData['stats']['thirty_day_average_price'])
+        self.thirtyDaySales = (jsonData['stats']['thirty_day_sales'])
+        self.thirtyDayChange = (jsonData['stats']['thirty_day_change'])
+        self.thirtyDayVolume = (jsonData['stats']['thirty_day_volume'])
+        self.sevenDayAvgPrice = (jsonData['stats']['seven_day_average_price'])
+        self.sevenDaySales = (jsonData['stats']['seven_day_sales'])
+        self.sevenDayChange = (jsonData['stats']['seven_day_change'])
+        self.sevenDayVolume = (jsonData['stats']['seven_day_volume'])
+        self.oneDayAvgPrice = (jsonData['stats']['one_day_average_price'])
+        self.oneDaySales = (jsonData['stats']['one_day_sales'])
+        self.oneDayChange = (jsonData['stats']['one_day_change'])
+        self.oneDayVolume = (jsonData['stats']['one_day_volume'])
 
 
 class Event:
