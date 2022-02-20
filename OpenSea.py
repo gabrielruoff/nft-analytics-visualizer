@@ -237,12 +237,7 @@ class Collection:
 
         self.events = None
         self.event_dates = None
-
-        for contract in jsonData['primary_asset_contracts']:
-            if contract["asset_contract_type"] == "non-fungible":
-                self.ERC721Address = contract["address"]
-                self.events = self.get_event_data()
-                self.get_event_data()
+        self.assets = None
 
         print(self.jsonData)
         self.stats = jsonData['stats']
@@ -278,19 +273,16 @@ class Collection:
         for contract in jsonData['primary_asset_contracts']:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
-                self.events = self.get_event_data()
-                self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
-                self.assets = self.get_asset_data()
 
-    def get_event_data(self):
+    def load_event_data(self):
         with OpenSea() as oS:
-            events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
-            return events
+            self.events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
+            self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for
+                                event in self.events]
 
-    def get_asset_data(self):
+    def load_asset_data(self):
         with OpenSea() as oS:
-            assets = oS.get_assets(50, asset_contract=self.ERC721Address)
-            return assets
+            self.assets = oS.get_assets(50, asset_contract=self.ERC721Address)
 
 
 class Event:
