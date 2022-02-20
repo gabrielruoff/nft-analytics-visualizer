@@ -3,6 +3,7 @@ import requests
 
 oS = OpenSea()
 
-collections = oS.get_collections(limit=300)
-for collection in collections:
-    print(collection.jsonData)
+collection = oS.get_collection("veefriends")
+print(collection.events[0].total_price)
+print(collection.ERC721Address)
+print(collection.events[0].jsonData)
