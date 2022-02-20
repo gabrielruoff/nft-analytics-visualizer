@@ -1,8 +1,5 @@
 import csv
-import time
-
-from OpenSea import OpenSea, Collection, Event
-import requests
+from OpenSea import OpenSea
 
 oS = OpenSea()
 
