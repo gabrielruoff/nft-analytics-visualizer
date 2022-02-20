@@ -221,28 +221,40 @@ class Collection:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
                 self.events = self.get_event_data()
+                self.get_event_data()
 
-        self.floorPrice = (jsonData['stats']['floor_price'])
-        self.marketCap = (jsonData['stats']['market_cap'])
-        self.numReports = (jsonData['stats']['num_reports'])
-        self.averagePrice = (jsonData['stats']['average_price'])
-        self.numOwners = (jsonData['stats']['num_owners'])
-        self.count = (jsonData['stats']['count'])
-        self.totalSupply = (jsonData['stats']['total_supply'])
-        self.totalSales = (jsonData['stats']['total_sales'])
-        self.totalVolume = (jsonData['stats']['total_volume'])
-        self.thirtyDayAvgPrice = (jsonData['stats']['thirty_day_average_price'])
-        self.thirtyDaySales = (jsonData['stats']['thirty_day_sales'])
-        self.thirtyDayChange = (jsonData['stats']['thirty_day_change'])
-        self.thirtyDayVolume = (jsonData['stats']['thirty_day_volume'])
-        self.sevenDayAvgPrice = (jsonData['stats']['seven_day_average_price'])
-        self.sevenDaySales = (jsonData['stats']['seven_day_sales'])
-        self.sevenDayChange = (jsonData['stats']['seven_day_change'])
-        self.sevenDayVolume = (jsonData['stats']['seven_day_volume'])
-        self.oneDayAvgPrice = (jsonData['stats']['one_day_average_price'])
-        self.oneDaySales = (jsonData['stats']['one_day_sales'])
-        self.oneDayChange = (jsonData['stats']['one_day_change'])
-        self.oneDayVolume = (jsonData['stats']['one_day_volume'])
+        print(self.jsonData)
+        self.stats = jsonData['stats']
+        print('got here')
+
+        # get stats
+        self.floorPrice = (self.stats['floor_price'])
+        self.marketCap = (self.stats['market_cap'])
+        self.numReports = (self.stats['num_reports'])
+        self.averagePrice = (self.stats['average_price'])
+        self.numOwners = (self.stats['num_owners'])
+        self.count = (self.stats['count'])
+        self.totalSupply = (self.stats['total_supply'])
+        self.totalSales = (self.stats['total_sales'])
+        self.totalVolume = (self.stats['total_volume'])
+        self.thirtyDayAvgPrice = (self.stats['thirty_day_average_price'])
+        self.thirtyDaySales = (self.stats['thirty_day_sales'])
+        self.thirtyDayChange = (self.stats['thirty_day_change'])
+        self.thirtyDayVolume = (self.stats['thirty_day_volume'])
+        self.sevenDayAvgPrice = (self.stats['seven_day_average_price'])
+        self.sevenDaySales = (self.stats['seven_day_sales'])
+        self.sevenDayChange = (self.stats['seven_day_change'])
+        self.sevenDayVolume = (self.stats['seven_day_volume'])
+        self.oneDayAvgPrice = (self.stats['one_day_average_price'])
+        self.oneDaySales = (self.stats['one_day_sales'])
+        self.oneDayChange = (self.stats['one_day_change'])
+        self.oneDayVolume = (self.stats['one_day_volume'])
+
+        # get other important data
+        self.image = (self.jsonData['image_url'])
+        # collection pic url
+
+
 
     def get_event_data(self):
         with OpenSea() as oS:
