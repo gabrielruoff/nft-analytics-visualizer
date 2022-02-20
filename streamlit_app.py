@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import csv
 
+from OpenSea import OpenSea
+
 st.set_page_config(layout="wide")
 
 st.title('NFT Project Analysis Dashboard', )
@@ -17,12 +19,17 @@ with open('collection_names.csv', newline='') as f:
     reader = csv.reader(f)
     collections = list(reader)
 
-print(collections)
-
-cols = [st.columns(len(collections))]
-for i, collection in enumerate(collections):
-    with cols[i]:
-        st.metric(label=collection, value="93.9 ETH", delta="-82.18%")
+oS = OpenSea()
+print("{} collections".format(len(collections)))
+c = []
+for collection in collections:
+    c.append(oS.get_collection(collection))
+collections = c
+for collection in collections:
+    print(collection.oneDayChange)
+collections.sort(key=lambda x: x.oneDayChange)
+for collection in collections:
+    print(collection.oneDayChange)
 
 col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
 

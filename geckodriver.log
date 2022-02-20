@@ -867,3 +867,4 @@ DevTools listening on ws://localhost:61071/devtools/browser/e9fa006e-fe62-4281-8
 1645320819119	Marionette	INFO	Listening on port 61080
 1645320819171	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
 1645320947831	Marionette	INFO	Stopped listening on port 61080
+[ERROR osclientcerts_static] ThreadId(51) C_FindObjectsInit: CKR_ARGUMENTS_BAD: ExternalError at security/manager/ssl/osclientcerts/src/backend_macos.rs:921 (-25300)

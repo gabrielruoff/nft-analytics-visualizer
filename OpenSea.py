@@ -113,7 +113,12 @@ class OpenSea:
                 time.sleep(3)
         return assets
 
-    def get_collection(self, name):
+    def get_collection(self, name, path=None):
+        if path is not None:
+            if path[-1] != '/':
+                path += '/'
+            with open(path + name + '.json') as f:
+                return Collection(json.load(f))
         # create request url
         url = self.endpoints["collection"] + str(name)
         # submit request to the OpenSea api
@@ -239,9 +244,7 @@ class Collection:
         self.event_dates = None
         self.assets = None
 
-        print(self.jsonData)
         self.stats = jsonData['stats']
-        print('got here')
 
         # get stats
         self.floorPrice = (self.stats['floor_price'])
@@ -265,6 +268,10 @@ class Collection:
         self.oneDaySales = (self.stats['one_day_sales'])
         self.oneDayChange = (self.stats['one_day_change'])
         self.oneDayVolume = (self.stats['one_day_volume'])
+        try:
+            self.name = (self.jsonData['primary_asset_contracts'][0]['name'])
+        except Exception:
+            pass
 
         # get other important data
         self.image = (self.jsonData['image_url'])
@@ -274,15 +281,23 @@ class Collection:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
 
+    # load collection event data
     def load_event_data(self):
         with OpenSea() as oS:
             self.events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
             self.event_dates = [datetime.datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for
                                 event in self.events]
 
+    # load collection asset data
     def load_asset_data(self):
         with OpenSea() as oS:
             self.assets = oS.get_assets(50, asset_contract=self.ERC721Address)
+
+    def export_json_data(self, path='./'):
+        if path[-1] != '/':
+            path += '/'
+        with open(path + self.name + '.json', 'w') as f:
+            json.dump(self.jsonData, f)
 
 
 class Event:
