@@ -17,16 +17,16 @@ with open('collection_names.csv', newline='') as f:
     #     next(reader)
     collections = list(reader)
 
-print("{} collections".format(len(collections)))
-c = []
-i=0
+# print("{} collections".format(len(collections)))
+# c = []
+# i=0
 for collection in collections:
 
     print(collection[0])
     c = oS.get_collection(collection[0], path='collectiondata/')
     print(c.oneDayChange)
-    i += 1
-    # print(c.jsonData)
+    # i += 1
+    c.load_event_data()
     # try:
     #     c.export_json_data('collectiondata/')
     # except Exception:
@@ -39,5 +39,10 @@ for collection in collections:
 # for collection in collections:
 #     print(collection.oneDayChange)
 
+<<<<<<< Updated upstream:test.py
 f.close()
 print(i)
+=======
+# f.close()
+# print(i)
+>>>>>>> Stashed changes:main.py
