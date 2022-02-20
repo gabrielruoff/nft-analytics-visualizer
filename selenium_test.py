@@ -40,19 +40,19 @@ while i < 10:
     time.sleep(1)
     position = 0
     max_position = driver.execute_script("return document.body.scrollHeight")
-    elems = driver.find_elements(By.XPATH, "//div[@role='listitem']//div[@class='Overflowreact__OverflowContainer-sc-7qr9y8-0 jPSCbX Ranking--collection-name-overflow']")
+    elems = driver.find_elements(By.XPATH, "//a[@class='styles__StyledLink-sc-l6elh8-0 ekTmzq Blockreact__Block-sc-1xf18x6-0 Flexreact__Flex-sc-1twd32i-0 Itemreact__ItemBase-sc-1idymv7-0 styles__FullRowContainer-sc-12irlp3-0 bnxsDk jYqxGr dCVDRE lcvzZN fresnel-greaterThanOrEqual-xl']")
     for elem in elems:
-        collections.append(elem.text)
+        href = elem.get_attribute("href").split('/')[-1]
+        collections.append(href)
     while position <= max_position:
         scroll_by_height = 2000
         driver.execute_script("window.scrollBy(0, {})".format(scroll_by_height))
         time.sleep(0.25)
         elems = driver.find_elements(By.XPATH,
-                                     "//div[@role='listitem']//div[@class='Overflowreact__OverflowContainer-sc-7qr9y8-0 jPSCbX Ranking--collection-name-overflow']")
+                                     "//a[@class='styles__StyledLink-sc-l6elh8-0 ekTmzq Blockreact__Block-sc-1xf18x6-0 Flexreact__Flex-sc-1twd32i-0 Itemreact__ItemBase-sc-1idymv7-0 styles__FullRowContainer-sc-12irlp3-0 bnxsDk jYqxGr dCVDRE lcvzZN fresnel-greaterThanOrEqual-xl']")
         for elem in elems:
-            collections.append(elem.text)
-            # print(elem.text)
-        # print(len(elems))
+            href = elem.get_attribute("href").split('/')[-1]
+            collections.append(href)
         position += scroll_by_height
     button = driver.find_element(By.XPATH, "//button[@class='Blockreact__Block-sc-1xf18x6-0 Buttonreact__StyledButton-sc-glfma3-0 kGCMze hJoTEY']")
     button.click()

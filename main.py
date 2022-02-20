@@ -2,15 +2,7 @@ from OpenSea import OpenSea, Collection, Event
 import requests
 
 oS = OpenSea()
-# collections = oS.get_collections(limit=20)
-# print(collections['collections'][0])
-# c = []
-# for collection in collections['collections']:
-#     if collection['stats']['total_supply'] != 0.0:
-#         c.append(collection)
-# collections = c
-#
-# print(collections)
-# print(len(collections))
-bayc = oS.get_collection("veefriends")
-print(bayc.jsonData)
+
+collections = oS.get_collections(limit=300)
+for collection in collections:
+    print(collection.jsonData)

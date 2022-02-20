@@ -109,7 +109,10 @@ class OpenSea:
         response = requests.request("GET", self.endpoints['collections'], params=params, headers=headers)
         if response.status_code == 200:
             response = json.loads(response.text)
-            return response
+            c = []
+            for collection in response['collections']:
+                c.append(Collection(collection))
+            return c
         raise Exception(
             "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
 
