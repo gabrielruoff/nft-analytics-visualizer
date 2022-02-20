@@ -58,6 +58,12 @@ class OpenSea:
             "Accept": "application/json",
         }
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
     def _build_request_params(self, _params, request_type):
         # build request params
         params = {}
@@ -208,19 +214,15 @@ class Collection:
     def __init__(self, jsonData):
         self.jsonData = jsonData
 
+        self.events = None
+        self.event_dates = None
+
         for contract in jsonData['primary_asset_contracts']:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
-                self.get_event_data()
+                self.events = self.get_event_data()
 
-        self.stats = jsonData['stats']
-        print('got here')
-        print(self.stats)
-
-
-
-
-        self.floorPrice = (jsonData['collections'][0]['stats']['floor_price'])
+        self.floorPrice = (jsonData['stats']['floor_price'])
         self.marketCap = (jsonData['stats']['market_cap'])
         self.numReports = (jsonData['stats']['num_reports'])
         self.averagePrice = (jsonData['stats']['average_price'])
@@ -241,6 +243,11 @@ class Collection:
         self.oneDaySales = (jsonData['stats']['one_day_sales'])
         self.oneDayChange = (jsonData['stats']['one_day_change'])
         self.oneDayVolume = (jsonData['stats']['one_day_volume'])
+
+    def get_event_data(self):
+        with OpenSea() as oS:
+            events = oS.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
+            return events
 
 
 class Event:
