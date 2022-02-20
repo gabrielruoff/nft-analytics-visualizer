@@ -125,7 +125,7 @@ class OpenSea:
         response = requests.request("GET", url)
         if response.status_code == 200:
             response = json.loads(response.text)
-            return Collection(response['collection'])
+            return Collection(response['collection'], name)
         raise Exception(
             "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
 
@@ -237,9 +237,10 @@ class Asset:
 
 
 class Collection:
-    def __init__(self, jsonData):
+    def __init__(self, jsonData, namestring):
         self.jsonData = jsonData
 
+        self.namestring = namestring
         self.events = None
         self.event_dates = None
         self.assets = None
@@ -296,7 +297,7 @@ class Collection:
     def export_json_data(self, path='./'):
         if path[-1] != '/':
             path += '/'
-        with open(path + self.name + '.json', 'w') as f:
+        with open(path + self.namestring + '.json', 'w') as f:
             json.dump(self.jsonData, f)
 
 
