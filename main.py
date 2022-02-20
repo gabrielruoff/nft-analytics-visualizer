@@ -1,7 +1,7 @@
 from OpenSea import OpenSea, Collection, Event
 import requests
 
-# oS = OpenSea()
+oS = OpenSea()
 # collections = oS.get_collections(limit=20)
 # print(collections['collections'][0])
 # c = []
@@ -12,6 +12,5 @@ import requests
 #
 # print(collections)
 # print(len(collections))
-headers = {"Accept": "application/json"}
-response = requests.request("GET", "https://opensea.io/rankings", headers=headers)
-print(response.text)
+bayc = oS.get_collection("veefriends")
+print(bayc.jsonData)
