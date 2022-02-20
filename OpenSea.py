@@ -82,35 +82,22 @@ class OpenSea:
 
         _params = [limit, offset, token_ids, image_url, background_color, name, external_link, asset_contract, owner,
                    traits, last_sale]
-        # build request params and headers
+        # build request params
         params = self._build_request_params(_params, "assets")
         headers = self.request_headers
         headers["X-API-KEY"] = self.api_keys["opensea"]
 
-        # 50 is api limit
-        apilimit = self.api_limits["assets"]
-        _num_loops = int(math.ceil(limit / apilimit))
-        assets = []
-        for loop in range(1, _num_loops + 1):
-            params['offset'] = loop * apilimit
-            # set limit
-            if limit - ((loop - 1) * apilimit) > apilimit:
-                params['limit'] = apilimit
-            else:
-                params['limit'] = int(limit - ((loop - 1) * apilimit))
-            # submit request to the OpenSea api
-            response = requests.request("GET", self.endpoints["assets"], params=params, headers=headers)
-            # if response OK
-            if response.status_code == 200:
-                response = json.loads(response.text)
-                for asset in response['assets']:
-                    assets.append(Asset(asset))
-            else:
-                raise Exception(
-                    "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
-            if loop < _num_loops + 1:
-                time.sleep(3)
-        return assets
+        # submit request to the OpenSea api
+        response = requests.request("GET", self.endpoints["assets"], params=params)
+        # if response OK
+        if response.status_code == 200:
+            response = json.loads(response.text)
+            assets = []
+            for asset in response['assets']:
+                assets.append(Asset(asset))
+            return assets
+        raise Exception(
+            "[Error] request returned code {} with reason {}".format(response.status_code, response.reason))
 
     def get_collection(self, name):
         # create request url
@@ -237,27 +224,42 @@ class Collection:
         self.events = None
         self.event_dates = None
 
-        self.floorPrice = (jsonData['stats']['floor_price'])
-        self.marketCap = (jsonData['stats']['market_cap'])
-        self.numReports = (jsonData['stats']['num_reports'])
-        self.averagePrice = (jsonData['stats']['average_price'])
-        self.numOwners = (jsonData['stats']['num_owners'])
-        self.count = (jsonData['stats']['count'])
-        self.totalSupply = (jsonData['stats']['total_supply'])
-        self.totalSales = (jsonData['stats']['total_sales'])
-        self.totalVolume = (jsonData['stats']['total_volume'])
-        self.thirtyDayAvgPrice = (jsonData['stats']['thirty_day_average_price'])
-        self.thirtyDaySales = (jsonData['stats']['thirty_day_sales'])
-        self.thirtyDayChange = (jsonData['stats']['thirty_day_change'])
-        self.thirtyDayVolume = (jsonData['stats']['thirty_day_volume'])
-        self.sevenDayAvgPrice = (jsonData['stats']['seven_day_average_price'])
-        self.sevenDaySales = (jsonData['stats']['seven_day_sales'])
-        self.sevenDayChange = (jsonData['stats']['seven_day_change'])
-        self.sevenDayVolume = (jsonData['stats']['seven_day_volume'])
-        self.oneDayAvgPrice = (jsonData['stats']['one_day_average_price'])
-        self.oneDaySales = (jsonData['stats']['one_day_sales'])
-        self.oneDayChange = (jsonData['stats']['one_day_change'])
-        self.oneDayVolume = (jsonData['stats']['one_day_volume'])
+        for contract in jsonData['primary_asset_contracts']:
+            if contract["asset_contract_type"] == "non-fungible":
+                self.ERC721Address = contract["address"]
+                self.events = self.get_event_data()
+                self.get_event_data()
+
+        print(self.jsonData)
+        self.stats = jsonData['stats']
+        print('got here')
+
+        # get stats
+        self.floorPrice = (self.stats['floor_price'])
+        self.marketCap = (self.stats['market_cap'])
+        self.numReports = (self.stats['num_reports'])
+        self.averagePrice = (self.stats['average_price'])
+        self.numOwners = (self.stats['num_owners'])
+        self.count = (self.stats['count'])
+        self.totalSupply = (self.stats['total_supply'])
+        self.totalSales = (self.stats['total_sales'])
+        self.totalVolume = (self.stats['total_volume'])
+        self.thirtyDayAvgPrice = (self.stats['thirty_day_average_price'])
+        self.thirtyDaySales = (self.stats['thirty_day_sales'])
+        self.thirtyDayChange = (self.stats['thirty_day_change'])
+        self.thirtyDayVolume = (self.stats['thirty_day_volume'])
+        self.sevenDayAvgPrice = (self.stats['seven_day_average_price'])
+        self.sevenDaySales = (self.stats['seven_day_sales'])
+        self.sevenDayChange = (self.stats['seven_day_change'])
+        self.sevenDayVolume = (self.stats['seven_day_volume'])
+        self.oneDayAvgPrice = (self.stats['one_day_average_price'])
+        self.oneDaySales = (self.stats['one_day_sales'])
+        self.oneDayChange = (self.stats['one_day_change'])
+        self.oneDayVolume = (self.stats['one_day_volume'])
+
+        # get other important data
+        self.image = (self.jsonData['image_url'])
+        # collection pic url
 
         for contract in jsonData['primary_asset_contracts']:
             if contract["asset_contract_type"] == "non-fungible":

@@ -3,8 +3,9 @@ import requests
 
 oS = OpenSea()
 
-collection = oS.get_collection("one-hour-time-pieces")
+collection = oS.get_collection("veefriends")
 print(collection.events[0].total_price)
 print(collection.ERC721Address)
-print(collection.events[0].jsonData)
-print(collection.assets[0].token_id)
+print(collection.jsonData)
+print(collection.floorPrice)
+print(collection.sevenDaySales)
