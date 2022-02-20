@@ -24,7 +24,7 @@ i=0
 for collection in collections:
 
     # print(collection[0])
-    c = oS.get_collection(collection[0], path='collectiondata/')
+    #c = oS.get_collection(collection[0], path='collectiondata/')
     # print(c.oneDayChange)
     i += 1
     # print(c.jsonData)
