@@ -274,6 +274,7 @@ class Collection:
         self.oneDaySales = (self.stats['one_day_sales'])
         self.oneDayChange = (self.stats['one_day_change'])
         self.oneDayVolume = (self.stats['one_day_volume'])
+        self.name = (self.stats['name'])
 
         # get other important data
         self.image = (self.jsonData['image_url'])
