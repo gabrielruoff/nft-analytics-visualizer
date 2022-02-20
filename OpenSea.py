@@ -1,3 +1,4 @@
+import datetime
 import json
 import math
 import time
@@ -210,9 +211,16 @@ class Collection:
         for contract in jsonData['primary_asset_contracts']:
             if contract["asset_contract_type"] == "non-fungible":
                 self.ERC721Address = contract["address"]
+                self.get_event_data()
 
         self.stats = jsonData['stats']
         self.floor = jsonData['stats']['floor_price']
+        self.events = None
+        self.event_dates = None
+
+    def get_event_data(self):
+        self.events = Event.get_events(300, asset_contract_address=self.ERC721Address, event_type="successful")
+        self.event_dates = [datetime.strptime(event.created_date, "%Y-%m-%dT%H:%M:%S.%f") for event in self.events]
 
 
 class Event:
