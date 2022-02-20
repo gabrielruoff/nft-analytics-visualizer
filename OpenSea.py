@@ -211,6 +211,15 @@ class Asset:
                 """
         }
         self.jsonData = jsonData
+        self.numSales = self.jsonData['num_sales']
+        self.imageURL = self.jsonData['image_url']
+        self.description = self.jsonData['description']
+        self.externalLink = self.jsonData['asset_contract']['external_link']
+        self.openseaLink = self.jsonData['permalink']
+        self.creator = self.jsonData['creator']['user']['username']
+        if self.jsonData['last_sale'] is not None:
+            self.lastSale = self.jsonData['last_sale']
+
         self.token_id = None
         if 'token_id' in jsonData:
             self.token_id = jsonData['token_id']

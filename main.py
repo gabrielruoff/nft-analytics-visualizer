@@ -4,9 +4,11 @@ import requests
 oS = OpenSea()
 
 collection = oS.get_collection("veefriends")
-print(collection.events[0].total_price)
+print(collection.totalVolume)
 print(collection.ERC721Address)
 print(collection.jsonData)
 print(collection.floorPrice)
 print(collection.sevenDaySales)
-print(collection.assets[0].name)
+collection.load_asset_data()
+
+print(collection.assets[0])
